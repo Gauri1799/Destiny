@@ -8,7 +8,7 @@ on:
 
 
 env:
-  DOCKER_HUB_USER: gauri1799
+  DOCKER_HUB_USERNAME: gauri1799
 
 
 jobs:
