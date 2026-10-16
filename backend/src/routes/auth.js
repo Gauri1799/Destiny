@@ -5,10 +5,15 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const { validateSignupData } = require("../utils/validation");
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+};
+
 //signup api for signing the user
 authRouter.patch("/signup", async (req, res) => {
   try {
-    //Validate the data
     validateSignupData(req);
     const {
       firstName,
@@ -20,15 +25,13 @@ authRouter.patch("/signup", async (req, res) => {
       about,
       skills,
     } = req.body;
-    //Encrypt the password
-    const passwordHash = await bcrypt.hash(password, 10);
 
-    const checkEmail=await User.findOne({emailId});
-    console.log(checkEmail)
-    if(checkEmail){
-      throw new Error("Email Already Exist")
+    const checkEmail = await User.findOne({ emailId });
+    if (checkEmail) {
+      throw new Error("Email Already Exist");
     }
 
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const user = new User({
       firstName,
@@ -43,13 +46,14 @@ authRouter.patch("/signup", async (req, res) => {
     const savedUser = await user.save();
     const token = await savedUser.getjwt();
     res.cookie("token", token, {
+      ...cookieOptions,
       expires: new Date(Date.now() + 8 * 3600000),
     });
     res
       .status(200)
       .json({ message: "User added successfully", data: savedUser });
   } catch (err) {
-    res.status(400).send("ERROR:" + err.message)
+    res.status(400).send("ERROR:" + err.message);
   }
 });
 
@@ -67,11 +71,12 @@ authRouter.patch("/login", async (req, res) => {
     if (isValidPassword) {
       const token = await user.getjwt();
       res.cookie("token", token, {
+        ...cookieOptions,
         expires: new Date(Date.now() + 8 * 3600000),
       });
       res.status(200).json({ user });
     } else {
-      throw new Error("Invalid Vredentials");
+      throw new Error("Invalid Credentials");
     }
   } catch (err) {
     res.status(400).send("ERROR:" + err.message);
@@ -81,6 +86,7 @@ authRouter.patch("/login", async (req, res) => {
 authRouter.patch("/logout", async (req, res) => {
   res
     .cookie("token", null, {
+      ...cookieOptions,
       expires: new Date(Date.now()),
     })
     .send("User Logged out successfully");

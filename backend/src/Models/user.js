@@ -91,6 +91,13 @@ userSchema.methods.getjwt = async function () {
 //     return passwordHash
 // }
 
+userSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    delete ret.password;
+    return ret;
+  },
+});
+
 userSchema.methods.validatePassword = async function (passwordInputByUser) {
   const user = this;
   const passwordHash = user.password;
