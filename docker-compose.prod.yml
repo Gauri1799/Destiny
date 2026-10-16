@@ -1,0 +1,12 @@
+services:
+  backend:
+    image: ${DOCKER_HUB_USERNAME}/destiny-backend:${TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+
+  frontend:
+    image: ${DOCKER_HUB_USERNAME}/destiny-frontend:${TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on: [backend]
