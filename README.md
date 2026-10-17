@@ -12,6 +12,7 @@ Encryption: bcryptjs for password hashing
 API Testing: Postman
 Environment Variables Management: dotenv
 Package Manager: npm
+
 🔑 Features Implemented
 1. Authentication System
 ✅ User Signup, Login, and Logout
@@ -19,18 +20,18 @@ Package Manager: npm
 ✅ Password encryption using bcryptjs
 ✅ Authentication middleware to protect routes
 
-2. User Profile Management
+3. User Profile Management
 ✅ View user profile
 ✅ Edit profile details (restricted fields for security)
 ✅ Update password with validation
 
-3. Connection Request System
+4. Connection Request System
 ✅ Send connection requests (Interested or Ignored)
 ✅ Accept or reject received requests
 ✅ Prevent duplicate requests using MongoDB validation
 ✅ Prevent self-requests using Mongoose .pre middleware
 
-4. Feed API & Pagination
+5. Feed API & Pagination
 ✅ Fetch suggested developers while excluding:
 
 Logged-in user
